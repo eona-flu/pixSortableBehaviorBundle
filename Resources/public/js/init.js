@@ -55,7 +55,7 @@ var DraggableTable = function(element) {
             var newPosition = moved.attr('data-current-position');
 
             $document.trigger('pixSortableBehaviorBundle.update', [event, ui]);
-            
+
             $.ajax({
                 'type': 'GET',
                 'url': moved.attr('data-url').replace('NEW_POSITION', newPosition),
@@ -71,5 +71,5 @@ var DraggableTable = function(element) {
                 }
             });
         }
-    }).disableSelection();
+    });
 };
