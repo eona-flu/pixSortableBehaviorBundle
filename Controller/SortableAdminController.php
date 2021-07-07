@@ -14,6 +14,7 @@ use Doctrine\Common\Util\ClassUtils;
 use Pix\SortableBehaviorBundle\Services\PositionHandler;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
@@ -23,6 +24,13 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
  */
 class SortableAdminController extends CRUDController
 {
+    public static function getSubscribedServices(): array
+    {
+        return [
+            'pix_sortable_behavior.position' => PositionHandler::class,
+        ] + parent::getSubscribedServices();
+    }
+
     /**
      * Move element
      *
@@ -30,7 +38,7 @@ class SortableAdminController extends CRUDController
      *
      * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function moveAction($position)
+    public function moveAction(Request $request, $position)
     {
         $translator = $this->get('translator');
 
@@ -58,7 +66,7 @@ class SortableAdminController extends CRUDController
 
         $this->admin->update($object);
 
-        if ($this->isXmlHttpRequest()) {
+        if ($this->isXmlHttpRequest($request)) {
             return $this->renderJson(array(
                 'result' => 'ok',
                 'objectId' => $this->admin->getNormalizedIdentifier($object)
